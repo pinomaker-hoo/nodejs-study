@@ -18,16 +18,17 @@ const http = require("http");
  */
 
 const server = http.createServer((req, res) => {
+  const POSTS_ID_REGEX = /^\/posts\/([a-zA-Z0-9-_])$/;
+  const postIdRegexResult =
+    (req.url && POSTS_ID_REGEX.exec(req.url)) || undefined;
   if (req.url === "/posts" && req.method === "GET") {
     res.statusCode = 200;
     res.end("List of posts");
-  } else if (
-    req.url &&
-    /^\/posts\/[a-zA-Z0-9-_]$/.test(req.url) &&
-    req.method === "GET"
-  ) {
+  } else if (postIdRegexResult) {
+    const postId = postIdRegexResult[1];
+    console.log(`postId : ${postId}`);
     res.statusCode = 200;
-    res.end("Some content of post");
+    res.end("Reading a post");
   } else if (req.url === "/posts" && req.method === "POST") {
     res.statusCode = 200;
     res.end("Creating post");
